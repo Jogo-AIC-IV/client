@@ -10,7 +10,7 @@ class Game {
             view: html_dom,
             width: 800,
             height: 600,
-            backgroundColor: '0xffffff'
+            backgroundColor: '0xeeeeee'
         });
     };
 
@@ -37,6 +37,20 @@ class Player {
         .on('pointerup',        onDragEnd)
         .on('pointerupoutside', onDragEnd)
         .on('pointermove',      onDragMove)
+
+        player.setTarget = function(target){
+            if(target){
+                this.target = target;
+                setInterval(() => {
+                    let abs_x = this.x - target.x;
+                    let abs_y = this.y - target.y;
+                    let abs_d = Math.sqrt(Math.pow(abs_x, 2) + Math.pow(abs_y, 2));
+                    let cos = abs_x / abs_d;
+                    let ang = Math.acos(cos);
+                    this.rotation = 3 + Math.sign(this.y - target.y)*ang;
+                }, 10); 
+            }
+        };
 
         return player;
     }
@@ -70,13 +84,18 @@ function main() {
     const game = new Game(HTML_DOM);
     const player = new Player();
 
-    const center_position_x = game.app.renderer.width / 2;
-    const center_position_y = game.app.renderer.height / 2;
-
-    let i = 10;
-    while(i--){
-        let new_hero = player.createPlayer();
-        game.addOnStage(new_hero);
+    let i = 0;
+    let shooters = [];
+    while(i < 5){
+        shooters.push(player.createPlayer());
+        game.addOnStage(shooters[i]);
+        i++;
+    }
+    while(i >= 0){
+        if(i < 5){
+            shooters[i].setTarget(shooters[i+1]);
+        }
+        i--;
     }
 }
 
