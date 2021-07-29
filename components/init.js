@@ -1,4 +1,4 @@
-const PATH_PREFIX = (window.location.hostname == 'https://jogo-aic-iv.github.io/client/') ? 'client/' : '../';
+const PATH_PREFIX = (window.location.hostname == 'jogo-aic-iv.github.io') ? 'client/' : '../';
 
 class Game {
     app;
