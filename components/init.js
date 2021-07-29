@@ -8,8 +8,8 @@ class Game {
     start = (html_dom) => {
         this.app = new PIXI.Application({
             view: html_dom,
-            width: window.innerWidth,
-            height: window.innerHeight,
+            width: 800,
+            height: 600,
             backgroundColor: '0xffffff'
         });
     };
@@ -20,10 +20,10 @@ class Game {
 }
 
 class Player {
-    createPlayer(position_x, position_y) {
+    createPlayer(position_x = Math.random()*800, position_y = Math.random()*600) {
         const player = PIXI.Sprite.from('assets/sprites/player.png');
         
-        player.scale.set(1);
+        player.scale.set(0.2);
 
         player.anchor.set(0.5);
         player.x = position_x;
@@ -72,12 +72,10 @@ function main() {
 
     const center_position_x = game.app.renderer.width / 2;
     const center_position_y = game.app.renderer.height / 2;
-    const hero = player.createPlayer(center_position_x, center_position_y);
-
 
     let i = 10;
     while(i--){
-        let new_hero = player.createPlayer(center_position_x, center_position_y);
+        let new_hero = player.createPlayer();
         game.addOnStage(new_hero);
     }
 }
