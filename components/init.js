@@ -1,3 +1,5 @@
+const PATH_PREFIX = (window.location.hostname == 'https://jogo-aic-iv.github.io/client/') ? 'client/' : '../';
+
 class Game {
     app;
 
@@ -21,7 +23,7 @@ class Game {
 
 class Player {
     createPlayer(position_x, position_y) {
-        const player = PIXI.Sprite.from('../assets/sprites/player.png');
+        const player = PIXI.Sprite.from(PATH_PREFIX+'assets/sprites/player.png');
         player.anchor.set(0.5);
         player.x = position_x;
         player.y = position_y;
