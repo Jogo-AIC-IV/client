@@ -33,56 +33,90 @@ class Game {
 
 class Player {
     createPlayer(position_x = Math.random()*800, position_y = Math.random()*600) {
+        const container = new PIXI.Container();
+
         const player = PIXI.Sprite.from('assets/sprites/player.png');
         
-        player.scale.set(0.2);
-
         player.anchor.set(0.5);
-        player.x = position_x;
-        player.y = position_y;
+
+        container.x = position_x;
+        container.y = position_y;
 
         player.interactive = true;
         player.buttonMode = true;
 
-        player.shooting_buffer = 0;
-        player.bullets = [];
+        container.shooting_buffer = 0;
+        container.bullets = [];
 
+        const rangeCircle = new PIXI.Graphics();
+        rangeCircle.beginFill(0x000000);
+        rangeCircle.drawCircle(0, 0, 900);
+        rangeCircle.endFill();
+        rangeCircle.alpha = 0;
+
+        container.addChild(rangeCircle);
+        container.addChild(player);
 
         player
-        .on('pointerdown',      onDragStart)
-        .on('pointerup',        onDragEnd)
-        .on('pointerupoutside', onDragEnd)
-        .on('pointermove',      onDragMove)
+        .on('pointerdown',      function(event){
+            this.data = event.data;
+            rangeCircle.alpha = 0.5;
+            this.dragging = true;
+        })
+        .on('pointerup',        function(){
+            this.dragging = false;
+            this.data = null;
+            rangeCircle.alpha = 0;
+        })
+        .on('pointerupoutside', function(){
+            this.dragging = false;
+            this.data = null;
+            rangeCircle.alpha = 0;
+        })
+        .on('pointermove',      function(){
+            if(this.dragging) {
+                const newPosition = this.data.getLocalPosition(this.parent.parent);
+                this.parent.x = newPosition.x;
+                this.parent.y = newPosition.y;
+            }
+        })
 
-        player.setTarget = function(game, target){
+        container.setTarget = function(game, target){
             if(target){
                 this.target = target;
                 game.ticker.add((time) => {
 
-                    if(this.shooting_buffer == 0){
-                        let bullet = new PIXI.Graphics();
-                        bullet.beginFill(0xFFFF00);
-                        bullet.drawCircle(this.x, this.y, 5);
-                        bullet.endFill();
-                        bullet.life = 300;
-                        bullet.target = this.target;
-                        this.bullets.push(bullet);
-                        game.addOnStage(bullet);
-
-
-                        this.scale.set(0.21);
-                        this.shooting_buffer = 50;
-                    }else{
-                        this.scale.set(0.2);
-                        this.shooting_buffer -= 1;
-                    }
 
                     let abs_x = this.x - this.target.x;
                     let abs_y = this.y - this.target.y;
                     let abs_d = Math.sqrt(Math.pow(abs_x, 2) + Math.pow(abs_y, 2));
                     let cos = abs_x / abs_d;
                     let ang = Math.acos(cos);
-                    this.rotation = 3 + Math.sign(this.y - this.target.y)*ang;
+                    this.scale.set(0.21);
+
+                    if(abs_d < 300){
+                        this.rotation = 3 + Math.sign(this.y - this.target.y)*ang;
+                    }
+
+                    if(this.shooting_buffer == 0){
+                        if(abs_d < 300){
+                            let bullet = new PIXI.Graphics();
+                            bullet.beginFill(0xFFFF00);
+                            bullet.drawCircle(this.x, this.y, 5);
+                            bullet.endFill();
+                            bullet.life = 300;
+                            bullet.target = this.target;
+                            this.bullets.push(bullet);
+                            game.addOnStage(bullet);
+                            this.shooting_buffer = 50;
+                            this.scale.set(0.21);
+                        }
+    
+    
+                    }else{
+                        this.scale.set(0.2);
+                        this.shooting_buffer -= 1;
+                    }
 
                     for(let i = 0; i < this.bullets.length; i++){
                         if(this.bullets[i].life <= 0 ){
@@ -97,7 +131,7 @@ class Player {
             }
         };
 
-        return player;
+        return container;
     }
 }
 
@@ -122,27 +156,6 @@ class Enemy {
         }
 
         return enemy;
-    }
-}
-
-
-function onDragStart(event) {
-    this.data = event.data;
-    this.alpha = 0.5;
-    this.dragging = true;
-}
-
-function onDragEnd() {
-    this.alpha = 1;
-    this.dragging = false;
-    this.data = null;
-}
-
-function onDragMove() {
-    if(this.dragging) {
-        const newPosition = this.data.getLocalPosition(this.parent);
-        this.x = newPosition.x;
-        this.y = newPosition.y;
     }
 }
 
