@@ -9,8 +9,8 @@ const BULLETS_CONFIG = {
     },
 };
 
-class Turret {
-    createTurret(position, range) {
+class Tower {
+    createTower(position, range) {
 
         // Range
         const sprite_range  = new PIXI.Graphics();

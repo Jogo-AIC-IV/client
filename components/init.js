@@ -4,7 +4,7 @@ const TURRET_SPRITE     = 'assets/sprites/player.png';
 const ENEMY_SPRITE      = 'assets/sprites/enemy.png';
 
 const HTML_DOM  = document.getElementById('game');
-const TURRET    = new Turret();
+const TURRET    = new Tower();
 const ENEMY     = new Enemy();
 const game      = new Game(HTML_DOM);
 
@@ -16,8 +16,8 @@ let price_counter = document.querySelector("#price_counter");
 function buyUnit(){
     if(money >= price){
         money -= price;
-        let turret = TURRET.createTurret({x: Math.random()*800, y: Math.random()*800}, 300);
-        game.addTurret(turret);
+        let tower = TURRET.createTower({x: Math.random()*800, y: Math.random()*800}, 300);
+        game.addTower(tower);
         price *= 1.25;
         price = price.toFixed();
         price_counter.innerHTML = 'R$' + price;

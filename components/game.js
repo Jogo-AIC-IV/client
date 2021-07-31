@@ -19,15 +19,15 @@ class Game {
         this.addOnStage(this.background);
         // Enemies
         this.enemies = [];
-        // Turrets
-        this.turrets = [];
+        // Towers
+        this.towers = [];
         // Main ticker
         this.ticker = PIXI.Ticker.shared;
         this.ticker.autoStart = true;
         this.ticker.add((time) => {
             this.app.renderer.render(this.app.stage);
-            this.turrets.forEach((turret) => {
-                turret.update(this, this.enemies);
+            this.towers.forEach((tower) => {
+                tower.update(this, this.enemies);
             });
         });
     }
@@ -36,9 +36,9 @@ class Game {
         this.app.stage.addChild(object);
     }
 
-    addTurret = (turret) => {
-        this.turrets.push(turret); 
-        this.addOnStage(turret);
+    addTower = (tower) => {
+        this.towers.push(tower); 
+        this.addOnStage(tower);
     }
 
     addEnemy = (enemy) => {
