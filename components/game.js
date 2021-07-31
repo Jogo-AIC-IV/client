@@ -14,8 +14,8 @@ class Game {
         // Background
         this.background = PIXI.TilingSprite.from(WINDOW_BACKGROUND);
         this.background.scale.set(0.5);
-        this.background.width = 1600;
-        this.background.height = 1200;
+        this.background.width = WINDOW_SIZE.width*2;
+        this.background.height = WINDOW_SIZE.height*2;
         this.addOnStage(this.background);
         // Enemies
         this.enemies = [];
