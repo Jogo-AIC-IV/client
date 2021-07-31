@@ -10,7 +10,7 @@ const BULLETS_CONFIG = {
 };
 
 class Tower {
-    createTower(position, range) {
+    createTower(app, position, range) {
 
         // Range
         const sprite_range  = new PIXI.Graphics();
@@ -20,7 +20,7 @@ class Tower {
         sprite_range.alpha = 0;
 
         // Main Sprite
-        const sprite        = new PIXI.Sprite.from(TURRET_SPRITE);
+        const sprite        = new PIXI.Sprite.from(TURRET_SPRITES[0]);
         sprite.anchor.set(0.5);
         sprite.scale.set(0.2);
         sprite.interactive = true;
@@ -33,6 +33,24 @@ class Tower {
             sprite_range.alpha  = 0;
             this.dragging       = false;
             this.data           = null;
+
+            let combining = app.towers.find((tower) => {
+                if(tower){
+                    return tower != this.parent && Math.abs(tower.x - this.parent.x) + Math.abs(tower.x - this.parent.x) < 50;
+                }else{
+                    return false;
+                }
+            });
+
+
+            if(combining){
+                if(this.parent.tier == combining.tier){
+                    sprite_range.alpha  = 0;
+                    this.dragging = false;
+                    this.data = null;
+                    app.combine(this.parent.hash, combining.hash);
+                }
+            }
         }).on('pointerupoutside',   function() {
             sprite_range.alpha  = 0;
             this.dragging       = false;
@@ -43,8 +61,6 @@ class Tower {
                 this.parent.x = new_position.x;
                 this.parent.y = new_position.y;
             }
-        }).on('pointermoveinside', function() {
-            console.log('oie');
         })
 
         // Main Container
@@ -54,13 +70,21 @@ class Tower {
         container.addChild(sprite_range);
         container.addChild(sprite);
         container.hash = (Math.random() * 999999).toFixed();
+        container.tier = 1;
+        
+        container.sprite = sprite;
 
         // Config
         container.target    = -1;
         container.range     = range;
 
         // Bullets
-        container.bullets   = Object.assign({}, BULLETS_CONFIG);
+        container.bullets   = JSON.parse(JSON.stringify(BULLETS_CONFIG));
+
+        container.updateTexture = function(texture) { 
+            sprite.destroy();
+
+        }
 
         container.findEnemy = function(enemies) {
             this.target = enemies.findIndex((enemy) => {
