@@ -19,6 +19,13 @@ class Enemy {
                 this.x = (this.x >= position_end.x) ? position_start.x : this.x;
                 this.y = (this.y >= position_end.y) ? position_start.y : this.y;
 
+                if(this.life_curr != this.life_max){
+                    let tint_factor = this.life_curr/this.life_max;
+                    this.tint = PIXI.utils.rgb2hex([1, tint_factor - 1, tint_factor - 1]);
+                }else{
+                    this.tint = PIXI.utils.rgb2hex([1, 1, 1]);
+                }
+
                 
                 if(this.life_curr <= 0){
                     this.life_curr = this.life_max;
