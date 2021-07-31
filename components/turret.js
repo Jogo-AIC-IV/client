@@ -1,16 +1,17 @@
 const BULLETS_CONFIG = {
     buffer_cur: 0,
-    buffer_max: 15,
+    buffer_max: 50,
     list:       [],
     config: {
-        size:  5,
-        speed: 15,
+        size:  7,
+        speed: 10,
         damage: 1
     },
 };
 
 class Turret {
     createTurret(position, range) {
+
         // Range
         const sprite_range  = new PIXI.Graphics();
         sprite_range.beginFill(0x000000);
@@ -52,13 +53,14 @@ class Turret {
         container.y         = position.y;
         container.addChild(sprite_range);
         container.addChild(sprite);
+        container.hash = (Math.random() * 999999).toFixed();
 
         // Config
         container.target    = -1;
         container.range     = range;
 
         // Bullets
-        container.bullets   = BULLETS_CONFIG;
+        container.bullets   = Object.assign({}, BULLETS_CONFIG);
 
         container.findEnemy = function(enemies) {
             this.target = enemies.findIndex((enemy) => {
