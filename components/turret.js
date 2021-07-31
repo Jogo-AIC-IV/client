@@ -114,6 +114,9 @@ class Turret {
 
         container.update = function(app, enemies) {
             this.updateBullets(app);
+            if(sprite.scale.x > 0.2){
+                sprite.scale.set(sprite.scale.x -= 0.0005);
+            }
             if(this.target != 0 && (!this.target || this.target == -1)) { return this.findEnemy(enemies); }
 
             let enemy   = enemies[this.target];
@@ -127,6 +130,7 @@ class Turret {
 
             if(this.bullets.buffer_cur <= 0 && dist_t <= this.range){
                 this.newBullet(app);
+                sprite.scale.set(0.22);
                 this.bullets.buffer_cur = this.bullets.buffer_max;
             }else{
                 this.bullets.buffer_cur -= 1;
