@@ -60,7 +60,7 @@ function enemyDie() {
     money += enemy_value;
     money = Math.ceil(money);
     enemy_value = enemy_value * 1.025;
-    money_counter.innerHTML = money;
+    money_counter.innerHTML = treat_number(money);
     if(game.enemies.length * 1.4 < game.towers.length){
         let new_emeny = ENEMY.createEnemy({x: 500, y: 600}, 6);
         new_emeny.setComplexPath(game, [{x:Math.random()*-200, y:100}, {x:600, y:100}, {x:600, y:400}, {x:100, y:400}, {x:100, y:600}, {x:800, y:600}], 3, null, enemyDie);
