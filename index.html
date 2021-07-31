@@ -40,6 +40,10 @@
                 background-color: greenyellow;
                 color: green;
             }
+            .bg-orange {
+                background-color: orange;
+                color: brown;
+            }
             .hover:hover {
                 cursor: pointer;
                 opacity: 0.9;
@@ -66,7 +70,8 @@
         <h5>Tower defense</h5>
         <div class="menu">
             <a class="bg-blue mr">R$<b id="money_counter">300</b></a>
-            <a class="bg-green hover" onclick="buyUnit()">New Unit <small id="price_counter">R$200</small></a>
+            <a class="bg-green mr hover" onclick="buyUnit()">New Unit <small id="unit_price_counter">R$200</small></a>
+            <a class="bg-orange hover" onclick="buyDamage()">+ Damage <small id="damage_price_counter">R$10000</small></a>
         </div>
         <canvas id="game"></canvas>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min.js"></script>
