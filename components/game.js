@@ -1,3 +1,57 @@
+/*
+Estrutura que vem da API
+
+match = [
+    {
+        money: 100,
+        unit_price: 100,
+        enemies: [
+            {
+                color:      [255, 255, 255],
+                life:       6,
+                position:   {
+                    x: 400,
+                    y: 400
+                }
+            },
+            ...
+        ],
+        towers:  {
+            types: [
+                {
+                    color: [255, 255, 255],
+                    range: 500,
+                    bullets: {
+                        color:          [255, 255, 255],
+                        size:           10,
+                        speed:          10,
+                        damage:         1,
+                        buffer_curr:    0,
+                        buffer_max:     50
+                    }
+                },
+                ...
+            ],
+            list: [
+                {
+                    id:         123,
+                    tier:       1,
+                    type:       0,
+                    position:   {
+                        x:      400,
+                        y:      400,
+                        angle:  0,
+                    },
+                },
+                ...
+            ],
+            total_tier: 1
+        }
+    }
+]
+
+*/
+
 class Game {
     app;
     background;
@@ -67,10 +121,17 @@ class Game {
             upgrade.bullets.config.damage += 1;
             upgrade.bullets.config.speed += 3;
             upgrade.bullets.config.size += 1;
-            upgrade.bullets.buffer_max -= 8;
+            upgrade.bullets.buffer_max *= 0.75;
             upgrade.tier += 1;
             upgrade.sprite.tint = PIXI.utils.rgb2hex(TURRET_COLORS[upgrade.tier]);
-            this.total_tier += 1;
+            this.total_tier += 0.5;
+
+            for(let i = 0; i < destroy.bullets.list.length; i++ ){
+                destroy.bullets.list[i].destroy();
+                destroy.bullets.list.splice(i, 1);
+            }
+
+
             destroy.destroy();
             this.towers.splice(id_destroy, 1);
         }

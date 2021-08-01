@@ -7,12 +7,14 @@ const TURRET_SPRITES    = [
     'assets/sprites/turret_4.png',
 ];
 const TURRET_COLORS     = [
-    [1, 1, 1],
-    [.9, .9, 1],
-    [.6, .9, 1],
-    [.3, .6, 1],
-    [0, .3, 1],
-    [0, 1, 1],
+    [1,     1,      1],
+    [1,     1,      .5],
+    [1,     .5,      1],
+    [1,     .5,      .5],
+    [.5,     1,      1],
+    [.5,     1,      .5],
+    [.5,     .5,      1],
+    [.5,     .5,      .5],
 
 ]
 const ENEMY_SPRITE      = 'assets/sprites/enemy.png';
@@ -26,7 +28,7 @@ const PATH = [{x:100, y:100}, {x:700, y:100}, {x:600, y:400}, {x:100, y:400}, {x
 
 let money       = 10;
 let enemy_value = 2;
-let enemy_factor = 1.05;
+let enemy_factor = .5;
 let money_counter = document.querySelector("#money_counter");
 let unit_price  = 5;
 let unit_factor = 1.45;
@@ -76,7 +78,7 @@ function buyDamage(){
 function enemyDie() {
     money += enemy_value;
     money = Math.ceil(money);
-    enemy_value = enemy_value * enemy_factor;
+    enemy_value = enemy_value + enemy_factor;
     money_counter.innerHTML = treat_number(money);
     console.log(game.total_tier);
     if(game.enemies.length * 1.65 <= game.total_tier){

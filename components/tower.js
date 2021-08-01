@@ -34,32 +34,48 @@ class Tower {
             this.dragging       = false;
             this.data           = null;
 
-            let combining = app.towers.find((tower) => {
-                if(tower){
-                    return tower != this.parent && Math.abs(tower.x - this.parent.x) + Math.abs(tower.x - this.parent.x) < 50;
-                }else{
-                    return false;
-                }
-            });
-
-
-            if(combining){
-                if(this.parent.tier == combining.tier){
+            if(this.combining){
+                if(this.parent.tier == this.combining.tier){
                     sprite_range.alpha  = 0;
                     this.dragging = false;
                     this.data = null;
-                    app.combine(this.parent.hash, combining.hash);
+                    app.combine(this.parent.hash, this.combining.hash);
                 }
             }
         }).on('pointerupoutside',   function() {
             sprite_range.alpha  = 0;
             this.dragging       = false;
             this.data           = null;
+
+            if(this.combining){
+                if(this.parent.tier == this.combining.tier){
+                    sprite_range.alpha  = 0;
+                    this.dragging = false;
+                    this.data = null;
+                    app.combine(this.parent.hash, this.combining.hash);
+                }
+            }
         }).on('pointermove',        function() {
+
             if(this.dragging) {
                 const new_position = this.data.getLocalPosition(this.parent.parent);
+
+                this.combining = app.towers.find((tower) => {
+                    if(tower){
+                        return tower.hash != this.parent.hash && tower.tier == this.parent.tier && Math.abs(tower.x - new_position.x) + Math.abs(tower.y - new_position.y) < 100;
+                    }else{
+                        return false;
+                    }
+                });
+                console.log(this.combining);
+
                 this.parent.x = new_position.x;
                 this.parent.y = new_position.y;
+                if(this.combining) {
+                    this.parent.x = this.combining.x;
+                    this.parent.y = this.combining.y;
+                    this.combining.sprite.scale.set(0.25);
+                }
             }
         })
 
@@ -116,7 +132,7 @@ class Tower {
                     return;
                 }
 
-                if((Math.abs(enemy.x - bullet.x) < 10 && Math.abs(enemy.y - bullet.y) < 10 )) {
+                if((Math.abs(enemy.x - bullet.x) < 30 && Math.abs(enemy.y - bullet.y) < 30 ) || enemy.life <= 0) {
                     enemy.life_curr -= this.bullets.config.damage;
                     bullet.destroy();
                     this.bullets.list.splice(i, 1);
