@@ -1,10 +1,10 @@
 const WINDOW_SIZE       = { width: 800, height: 800 };
 const WINDOW_BACKGROUND = 'assets/sprites/grass.png';
 const TURRET_SPRITES    = [
-    'assets/sprites/turret_1.png',
-    'assets/sprites/turret_2.png',
-    'assets/sprites/turret_3.png',
-    'assets/sprites/turret_4.png',
+    'assets/sprites/archer_0.png',
+    'assets/sprites/archer_1.png',
+    'assets/sprites/archer_2.png',
+    'assets/sprites/archer_3.png',
 ];
 const TURRET_COLORS     = [
     [1,     1,      1],
@@ -15,8 +15,8 @@ const TURRET_COLORS     = [
     [.5,     1,      .5],
     [.5,     .5,      1],
     [.5,     .5,      .5],
-
 ]
+const TOWER_SPRITE      = 'assets/sprites/tower.png';
 const ENEMY_SPRITE      = 'assets/sprites/enemy.png';
 
 const HTML_DOM  = document.getElementById('game');
@@ -26,13 +26,13 @@ const game      = new Game(HTML_DOM);
 
 const PATH = [{x:100, y:100}, {x:700, y:100}, {x:600, y:400}, {x:100, y:400}, {x:100, y:700}, {x:800, y:700}];
 
-let money       = 10;
+let money       = 10900;
 let enemy_value = 2;
 let enemy_factor = .5;
 let money_counter = document.querySelector("#money_counter");
 let unit_price  = 5;
 let unit_factor = 1.45;
-let unit_price_counter = document.querySelector("#unit_price_counter");
+let unit_price_counter = document.querySelectorAll("#unit_price_counter");
 let damage_price = 1000;
 let damage_factor = 10;
 let damage_price_counter = document.querySelector("#damage_price_counter");
@@ -50,13 +50,13 @@ damage_price_counter.innerHTML = 'R$' + treat_number(damage_price);
 unit_price_counter.innerHTML = 'R$' + treat_number(unit_price);
 money_counter.innerHTML = treat_number(money);
 
-function buyUnit(){
+function buyUnit(type){
     if(money >= unit_price){
         money -= unit_price;
-        let tower = TURRET.createTower(game, {x: Math.random()*800, y: Math.random()*800}, 300);
+        let tower = TURRET.createTower(game, type, {x: Math.random()*800, y: Math.random()*800}, 300);
         game.addTower(tower);
         unit_price *= unit_factor;
-        unit_price_counter.innerHTML = 'R$' + treat_number(unit_price);
+        unit_price_counter.forEach((counter) => counter.innerHTML = 'R$' + treat_number(unit_price));
         money_counter.innerHTML = treat_number(money);
     }
 }

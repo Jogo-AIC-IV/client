@@ -2,19 +2,28 @@ class Enemy {
     createEnemy(position, life) {
         const sprite = PIXI.Sprite.from(ENEMY_SPRITE);
         sprite.anchor.set(0.5);
-        sprite.scale.set(0.2);
+        sprite.scale.set(2);
         sprite.x = position.x;
         sprite.y = position.y;
         sprite.life_max = life;
         sprite.life_curr = life;
+
+        sprite.animation = 1;
 
         sprite.setLinearLoop = function(game, position_start, position_end, speed, callback_success = null, callback_died = null) {
             this.x = position_start.x;
             this.y = position_start.y;
 
             game.ticker.add((time) => {
+                if(this.scale.x == 2 || this.scale.x == 2.2){
+                    this.animation *= -1;
+                }
+                this.scale.set(this.scale.x - 0.015 * this.animation);
+
+
                 this.x += Math.sign(position_end.x - this.x) * speed;
                 this.y += Math.sign(position_end.y - this.y) * speed;
+                this.rotation = 2*Math.PI;
 
                 this.x = (this.x >= position_end.x) ? position_start.x : this.x;
                 this.y = (this.y >= position_end.y) ? position_start.y : this.y;
@@ -49,8 +58,14 @@ class Enemy {
             this.y = paths[this.current_path].y;
 
             game.ticker.add((time) => {
+                if(this.scale.x <= 2 || this.scale.x >= 2.2){
+                    this.animation *= -1;
+                }
+                this.scale.set(this.scale.x - 0.015 * this.animation);
+
                 let position_start = paths[this.current_path];
                 let position_end = paths[this.current_path < paths.length - 1 ? this.current_path + 1 : 0];
+                this.rotation = 2*Math.PI;
 
                 if(this.current_path + 1 == paths.length){
                     this.x = position_end.x;

@@ -66,18 +66,41 @@ class Game {
 
     intialize = (html_dom) => {
         // PIXI App
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         this.app = new PIXI.Application({
             view: html_dom,
             width: WINDOW_SIZE.width,
             height: WINDOW_SIZE.height,
             backgroundColor: '0xeeeeee'
         });
+
+        this.app.loader.baseUrl = "assets/sprites"
+        this.app.loader
+            .add("archer_0", "archer_0.png")
+            .add("archer_1", "archer_1.png")
+            .add("archer_2", "archer_2.png")
+            .add("archer_3", "archer_3.png")
+            .add("warrior_0", "warrior_0.png")
+            .add("warrior_1", "warrior_1.png")
+            .add("warrior_2", "warrior_2.png")
+            .add("warrior_3", "warrior_3.png")
+            .add("lancer_0", "lancer_0.png")
+            .add("lancer_1", "lancer_1.png")
+            .add("lancer_2", "lancer_2.png")
+            .add("lancer_3", "lancer_3.png")
+        this.app.loader.load();
+
         // Background
         this.background = PIXI.TilingSprite.from(WINDOW_BACKGROUND);
-        this.background.scale.set(0.5);
+        this.background.scale.set(4);
         this.background.width = WINDOW_SIZE.width*2;
         this.background.height = WINDOW_SIZE.height*2;
         this.addOnStage(this.background);
+        this.tower = PIXI.Sprite.from(TOWER_SPRITE);
+        this.tower.x = 600;
+        this.tower.y = 600;
+        this.tower.scale.set(4);
+        this.addOnStage(this.tower);
         // Enemies
         this.enemies = [];
         // Towers
@@ -123,8 +146,11 @@ class Game {
             upgrade.bullets.config.size += 1;
             upgrade.bullets.buffer_max *= 0.75;
             upgrade.tier += 1;
-            upgrade.sprite.tint = PIXI.utils.rgb2hex(TURRET_COLORS[upgrade.tier]);
             this.total_tier += 0.5;
+
+            upgrade.sprite.texture = this.app.loader.resources[`${upgrade.type}_${upgrade.tier}`].texture;
+            upgrade.sprite.scale.set(2);
+
 
             for(let i = 0; i < destroy.bullets.list.length; i++ ){
                 destroy.bullets.list[i].destroy();
