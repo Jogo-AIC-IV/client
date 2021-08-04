@@ -4,23 +4,25 @@ const BULLETS_CONFIG = {
         buffer_max: 50,
         list:       [],
         config: {
-            life: 150,
-            size:  7,
-            speed: 10,
-            damage: 1,
-            color: 0x555555
+            life: 6,
+            size:  10,
+            speed: 20,
+            damage: 2,
+            color: 0x555555,
+            range: 170
         },
     },
     'lancer': {
         buffer_cur: 0,
-        buffer_max: 80,
+        buffer_max: 70,
         list:       [],
         config: {
             life: 6,
-            size:  14,
+            size:  8,
             speed: 20,
-            damage: 2,
-            color: 0xFFFFFF
+            damage: 2.5,
+            color: 0xFFFFFF,
+            range: 200
         },
     },
     'archer' :{
@@ -32,7 +34,8 @@ const BULLETS_CONFIG = {
             size:  5,
             speed: 15,
             damage: 1,
-            color: 0x664400
+            color: 0x664400,
+            range: 350
         },
     }
 };
@@ -40,12 +43,29 @@ const BULLETS_CONFIG = {
 class Tower {
     createTower(app, type, position, range) {
 
+        // Main Container
+        const container     = new PIXI.Container();
+        container.x         = position.x;
+        container.y         = position.y;
+        container.hash = (Math.random() * 999999).toFixed();
+        container.tier = 0;
+        
+
+        // Config
+        container.type      = type;
+        container.target    = -1;
+        container.range     = range;
+
+        // Bullets
+        container.bullets   = JSON.parse(JSON.stringify(BULLETS_CONFIG[type]));
+
         // Range
         const sprite_range  = new PIXI.Graphics();
         sprite_range.beginFill(0x000000);
-        sprite_range.drawCircle(0, 0, range);
+        sprite_range.drawCircle(0, 0, container.bullets.config.range);
         sprite_range.endFill();
         sprite_range.alpha = 0;
+        container.addChild(sprite_range);
 
         // Main Sprite
         const sprite        = new PIXI.Sprite.from(app.app.loader.resources[`${type}_0`].texture);
@@ -106,25 +126,9 @@ class Tower {
                 }
             }
         })
-
-        // Main Container
-        const container     = new PIXI.Container();
-        container.x         = position.x;
-        container.y         = position.y;
-        container.addChild(sprite_range);
-        container.addChild(sprite);
-        container.hash = (Math.random() * 999999).toFixed();
-        container.tier = 0;
-        
         container.sprite = sprite;
+        container.addChild(sprite);
 
-        // Config
-        container.type      = type;
-        container.target    = -1;
-        container.range     = range;
-
-        // Bullets
-        container.bullets   = JSON.parse(JSON.stringify(BULLETS_CONFIG[type]));
 
         container.updateTexture = function(texture) { 
             sprite.destroy();
@@ -134,7 +138,7 @@ class Tower {
         container.findEnemy = function(enemies) {
             this.target = enemies.findIndex((enemy) => {
                 let distance = Math.sqrt( Math.pow((this.x - enemy.x), 2) + Math.pow((this.y - enemy.y), 2));
-                return distance <= this.range;
+                return distance <= this.bullets.config.range;
             });
         } 
 
@@ -198,7 +202,7 @@ class Tower {
             //     sprite.rotation = ang;
             // }
 
-            if(this.bullets.buffer_cur <= 0 && dist_t <= this.range){
+            if(this.bullets.buffer_cur <= 0 && dist_t <= this.bullets.config.range){
                 this.newBullet(app);
                 sprite.scale.set(2.2);
                 this.bullets.buffer_cur = this.bullets.buffer_max;
@@ -207,7 +211,7 @@ class Tower {
             }
             
 
-            if(dist_t >= this.range) { 
+            if(dist_t >= this.bullets.config.range) { 
                 this.target = -1;
             }
         }
