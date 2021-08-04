@@ -1,6 +1,11 @@
 class Enemy {
     createEnemy(position, life) {
-        const sprite = PIXI.Sprite.from(ENEMY_SPRITE);
+        let textures = [PIXI.Texture.from('assets/sprites/enemy_walk_0.png'), PIXI.Texture.from('assets/sprites/enemy_walk_1.png')];
+
+        //const sprite = PIXI.Sprite.from(ENEMY_SPRITE);
+        const sprite = PIXI.AnimatedSprite.fromFrames(['assets/sprites/enemy_walk_0.png', 'assets/sprites/enemy_walk_1.png']);
+        sprite.animationSpeed = 0.07;
+        sprite.play();
         sprite.anchor.set(0.5);
         sprite.scale.set(2);
         sprite.x = position.x;
@@ -18,7 +23,8 @@ class Enemy {
                 if(this.scale.x == 2 || this.scale.x == 2.2){
                     this.animation *= -1;
                 }
-                this.scale.set(this.scale.x - 0.015 * this.animation);
+                let scale = this.scale.x - 0.015 * this.animation;
+                this.scale.set(Math.sign(this.x - position_end.x)*scale, scale);
 
 
                 this.x += Math.sign(position_end.x - this.x) * speed;
@@ -58,14 +64,17 @@ class Enemy {
             this.y = paths[this.current_path].y;
 
             game.ticker.add((time) => {
-                if(this.scale.x <= 2 || this.scale.x >= 2.2){
-                    this.animation *= -1;
-                }
-                this.scale.set(this.scale.x - 0.015 * this.animation);
 
                 let position_start = paths[this.current_path];
                 let position_end = paths[this.current_path < paths.length - 1 ? this.current_path + 1 : 0];
                 this.rotation = 2*Math.PI;
+                
+                if(this.scale.y <= 2 || this.scale.y >= 2.2){
+                    this.animation *= -1;
+                }
+                let scale = this.scale.y - 0.015 * this.animation;
+                let scaleX = Math.sign(this.x - position_end.x) != 0 ? Math.sign(position_end.x - this.x)*scale : scale;
+                this.scale.set(scaleX, scale);
 
                 if(this.current_path + 1 == paths.length){
                     this.x = position_end.x;
