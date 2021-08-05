@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nova+Round&display=swap" rel="stylesheet">
+        <title>PIXI JS</title>
+        <style>
+            body {
+                margin: 0;
+                background: radial-gradient(#252530, #000005);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                flex-direction: column;
+                font-family: 'Nova Round', cursive;
+            }
+            canvas {
+                display: block;
+                box-shadow: 0px 10px 20px 5px #00000050;
+                border-radius: 32px;
+            }
+            h5 {
+                margin-bottom: 10px;
+                font-size: 30px;
+                color: white;
+                filter: drop-shadow(0px 0px 4px #ffffff80);
+            }
+            .mr {
+                margin-right: 5px;
+            }
+            .bg-blue {
+                background-color: dodgerblue;
+                color: white;
+            }
+            .bg-green {
+                background-color: greenyellow;
+                color: green;
+            }
+            .bg-orange {
+                background-color: orange;
+                color: brown;
+            }
+            .hover:hover {
+                cursor: pointer;
+                opacity: 0.9;
+            }
+            .menu {
+                display: flex;
+                justify-content: space-evenly;
+                align-items: center;
+                flex-direction: row;
+                margin-bottom: 10px;
+            }
+            .menu a {
+                margin-bottom: 10px;
+                border-radius: 8px;
+                padding: 8px;
+                padding-left: 16px;
+                padding-right: 16px;
+                font-size: 18px;
+                box-shadow: 0px 5px 10px 2px #00000025;
+            }
+        </style>
+    </head>
+    <body>
+        <h5>Tower defense</h5>
+        <div class="menu">
+            <a class="bg-blue mr">R$<b id="money_counter">300</b></a>
+            <a class="bg-orange hover" onclick="buyDamage()">+ Damage <small id="damage_price_counter">R$10000</small></a>
+        </div>
+        <div class="menu">
+            <a class="bg-green mr hover" onclick="buyUnit('archer')">+ Archer <small id="unit_price_counter">R$200</small></a>
+            <a class="bg-green mr hover" onclick="buyUnit('knight')">+ Knight <small id="unit_price_counter">R$200</small></a>
+            <a class="bg-green mr hover" onclick="buyUnit('lancer')">+ Lancer <small id="unit_price_counter">R$200</small></a>
+            <a class="bg-green mr hover" onclick="buyUnit('warrior')">+ Warrior <small id="unit_price_counter">R$200</small></a>
+        </div>
+        <canvas id="game"></canvas>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min.js"></script>
+        <script src="components/enemy.js"></script>
+        <script src="components/tower.js"></script>
+        <script src="components/game.js"></script>
+        <script src="components/init.js"></script>
+    </body>
+</html>

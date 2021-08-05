@@ -69,8 +69,8 @@ class Game {
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         this.app = new PIXI.Application({
             view: html_dom,
-            width: WINDOW_SIZE.width,
-            height: WINDOW_SIZE.height,
+            width: 500,
+            height: 500,
             backgroundColor: '0xeeeeee'
         });
 
@@ -91,15 +91,15 @@ class Game {
         this.app.loader.load();
 
         // Background
-        this.background = PIXI.TilingSprite.from(WINDOW_BACKGROUND);
-        this.background.scale.set(4);
-        this.background.width = WINDOW_SIZE.width*2;
-        this.background.height = WINDOW_SIZE.height*2;
+        this.background = PIXI.TilingSprite.from("assets/sprites/grass.png");
+        this.background.width = 250;
+        this.background.height = 250;
+        this.background.scale.set(2);
         this.addOnStage(this.background);
-        this.tower = PIXI.Sprite.from(TOWER_SPRITE);
-        this.tower.x = 600;
-        this.tower.y = 600;
-        this.tower.scale.set(4);
+        this.tower = PIXI.Sprite.from("assets/sprites/tower.png");
+        this.tower.x = 400;
+        this.tower.y = 400;
+        this.tower.scale.set(2);
         this.addOnStage(this.tower);
         // Enemies
         this.enemies = [];
@@ -133,13 +133,10 @@ class Game {
     }
 
     combine = (id_first, id_second) => {
-        console.log(`Combining ${id_first} & ${id_second}`);
         let id_destroy = this.towers.findIndex((tower) => (tower.hash == id_first));
         let id_upgrade = this.towers.findIndex((tower) => (tower.hash == id_second));
         let destroy    = this.towers[id_destroy];
         let upgrade    = this.towers[id_upgrade];
-        console.log(id_destroy);
-        console.log(id_upgrade);
         if(destroy && upgrade){
             upgrade.bullets.config.damage += 1;
             upgrade.bullets.config.speed += 3;
@@ -149,7 +146,7 @@ class Game {
             this.total_tier += 0.5;
 
             upgrade.sprite.texture = this.app.loader.resources[`${upgrade.type}_${upgrade.tier}`].texture;
-            upgrade.sprite.scale.set(2);
+            // upgrade.sprite.scale.set(2);
 
 
             for(let i = 0; i < destroy.bullets.list.length; i++ ){

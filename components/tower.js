@@ -14,7 +14,7 @@ const BULLETS_CONFIG = {
     },
     'lancer': {
         buffer_cur: 0,
-        buffer_max: 70,
+        buffer_max: 60,
         list:       [],
         config: {
             life: 6,
@@ -41,7 +41,7 @@ const BULLETS_CONFIG = {
 };
 
 class Tower {
-    createTower(app, type, position, range) {
+    createTower(app, type, position, config) {
 
         // Main Container
         const container     = new PIXI.Container();
@@ -54,10 +54,10 @@ class Tower {
         // Config
         container.type      = type;
         container.target    = -1;
-        container.range     = range;
 
         // Bullets
-        container.bullets   = JSON.parse(JSON.stringify(BULLETS_CONFIG[type]));
+        container.bullets   = config;
+        container.range     = config.config.range;
 
         // Range
         const sprite_range  = new PIXI.Graphics();
@@ -68,9 +68,16 @@ class Tower {
         container.addChild(sprite_range);
 
         // Main Sprite
-        const sprite        = new PIXI.Sprite.from(app.app.loader.resources[`${type}_0`].texture);
+        let sprite = {}
+        // if(type == 'lancer'){
+        //     sprite = PIXI.AnimatedSprite.fromFrames(['assets/sprites/lancer_3_0.png', 'assets/sprites/lancer_3_1.png', 'assets/sprites/lancer_3_2.png', 'assets/sprites/lancer_3_1.png']);
+        //     sprite.animationSpeed = 0.07;
+        //     sprite.play();
+        // }else{
+            sprite = new PIXI.Sprite.from(app.app.loader.resources[`${type}_0`].texture);
+        // }
         sprite.anchor.set(0.5);
-        sprite.scale.set(2);
+        // sprite.scale.set(2);
         sprite.interactive = true;
         sprite.buttonMode = true;
         sprite.on('pointerdown',    function(event) {
@@ -110,19 +117,17 @@ class Tower {
 
                 this.combining = app.towers.find((tower) => {
                     if(tower){
-                        return tower.type == this.parent.type &&  tower.hash != this.parent.hash && tower.tier == this.parent.tier && Math.abs(tower.x - new_position.x) + Math.abs(tower.y - new_position.y) < 100;
+                        return tower.type == this.parent.type &&  tower.hash != this.parent.hash && tower.tier == this.parent.tier && Math.abs(tower.x - new_position.x) + Math.abs(tower.y - new_position.y) < 50;
                     }else{
                         return false;
                     }
                 });
-                console.log(this.combining);
 
                 this.parent.x = new_position.x;
                 this.parent.y = new_position.y;
                 if(this.combining) {
                     this.parent.x = this.combining.x;
                     this.parent.y = this.combining.y;
-                    this.combining.sprite.scale.set(0.25);
                 }
             }
         })
@@ -182,13 +187,12 @@ class Tower {
 
                 bullet.position.set(bullet.position.x + off_x, bullet.position.y + off_y);
                 this.bullets.list[i].life -= 1;
-                console.log(this.bullets.list[i].life);
             }
         }
 
         container.update = function(app, enemies) {
             this.updateBullets(app);
-            if(sprite.scale.x > 2){
+            if(sprite.scale.x > 1){
                 sprite.scale.set(sprite.scale.x - 0.015);
             }
             if(this.target != 0 && (!this.target || this.target == -1)) { return this.findEnemy(enemies); }
@@ -204,7 +208,7 @@ class Tower {
 
             if(this.bullets.buffer_cur <= 0 && dist_t <= this.bullets.config.range){
                 this.newBullet(app);
-                sprite.scale.set(2.2);
+                sprite.scale.set(1.2);
                 this.bullets.buffer_cur = this.bullets.buffer_max;
             }else{
                 this.bullets.buffer_cur -= 1;

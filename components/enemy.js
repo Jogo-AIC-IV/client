@@ -1,13 +1,12 @@
 class Enemy {
     createEnemy(position, life) {
-        let textures = [PIXI.Texture.from('assets/sprites/enemy_walk_0.png'), PIXI.Texture.from('assets/sprites/enemy_walk_1.png')];
 
         //const sprite = PIXI.Sprite.from(ENEMY_SPRITE);
         const sprite = PIXI.AnimatedSprite.fromFrames(['assets/sprites/enemy_walk_0.png', 'assets/sprites/enemy_walk_1.png']);
         sprite.animationSpeed = 0.07;
         sprite.play();
         sprite.anchor.set(0.5);
-        sprite.scale.set(2);
+        // sprite.scale.set(2);
         sprite.x = position.x;
         sprite.y = position.y;
         sprite.life_max = life;
