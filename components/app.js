@@ -13,7 +13,7 @@ var app = new Vue({
                     list:       [],
                     config: {
                         life: 6,
-                        size:  10,
+                        size:  2,
                         speed: 20,
                         damage: 2.5,
                         color: 0x555555,
@@ -26,7 +26,7 @@ var app = new Vue({
                     list:       [],
                     config: {
                         life: 6,
-                        size:  8,
+                        size:  2,
                         speed: 20,
                         damage: 2,
                         color: 0xFFFFFF,
@@ -39,7 +39,7 @@ var app = new Vue({
                     list:       [],
                     config: {
                         life: 300,
-                        size:  5,
+                        size:  2,
                         speed: 15,
                         damage: 1,
                         color: 0x664400,
@@ -57,7 +57,7 @@ var app = new Vue({
     methods: {
         initializePixi() {
             this.pixi = new Game(this.$refs.canvas);
-            let paths = [{x: -100, y:50}, {x: 440, y: 50}, {x: 440, y:430}];
+            let paths = [{x: -100, y:50}, {x: 440, y: 50}, {x: 440, y:200}];
             let enemy = ENEMY.createEnemy({x: -100, y: 50}, 6);
             enemy.setComplexPath(this.pixi, paths, 1, () => {}, () => {});
             this.pixi.addEnemy(enemy);
@@ -68,7 +68,7 @@ var app = new Vue({
             let types = Object.keys(this.tower_types);
             let type = types[Math.floor(Math.random() * types.length)];
             let config = this.tower_types[type];
-            let tower = TOWER.createTower(this.pixi, type, {x: 50+Math.random()*400, y: 50+Math.random()*400}, config);
+            let tower = TOWER.createTower(this.pixi, type, {x: 50+Math.random()*400, y: 50+Math.random()*150}, config);
             this.pixi.addTower(tower);
         }
     },

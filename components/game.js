@@ -70,7 +70,7 @@ class Game {
         this.app = new PIXI.Application({
             view: html_dom,
             width: 500,
-            height: 500,
+            height: 250,
             backgroundColor: '0xeeeeee'
         });
 
@@ -93,12 +93,12 @@ class Game {
         // Background
         this.background = PIXI.TilingSprite.from("assets/sprites/grass.png");
         this.background.width = 250;
-        this.background.height = 250;
+        this.background.height = 125;
         this.background.scale.set(2);
         this.addOnStage(this.background);
         this.tower = PIXI.Sprite.from("assets/sprites/tower.png");
         this.tower.x = 400;
-        this.tower.y = 400;
+        this.tower.y = 150;
         this.tower.scale.set(2);
         this.addOnStage(this.tower);
         // Enemies
@@ -140,7 +140,6 @@ class Game {
         if(destroy && upgrade){
             upgrade.bullets.config.damage += 1;
             upgrade.bullets.config.speed += 3;
-            upgrade.bullets.config.size += 1;
             upgrade.bullets.buffer_max *= 0.75;
             upgrade.tier += 1;
             this.total_tier += 0.5;
