@@ -1,57 +1,3 @@
-/*
-Estrutura que vem da API
-
-match = [
-    {
-        money: 100,
-        unit_price: 100,
-        enemies: [
-            {
-                color:      [255, 255, 255],
-                life:       6,
-                position:   {
-                    x: 400,
-                    y: 400
-                }
-            },
-            ...
-        ],
-        towers:  {
-            types: [
-                {
-                    color: [255, 255, 255],
-                    range: 500,
-                    bullets: {
-                        color:          [255, 255, 255],
-                        size:           10,
-                        speed:          10,
-                        damage:         1,
-                        buffer_curr:    0,
-                        buffer_max:     50
-                    }
-                },
-                ...
-            ],
-            list: [
-                {
-                    id:         123,
-                    tier:       1,
-                    type:       0,
-                    position:   {
-                        x:      400,
-                        y:      400,
-                        angle:  0,
-                    },
-                },
-                ...
-            ],
-            total_tier: 1
-        }
-    }
-]
-
-*/
-
 class Game {
     app;
     background;
@@ -60,52 +6,57 @@ class Game {
     ticker;
     total_tier;
 
-    constructor(html_dom){
-        this.intialize(html_dom);
+    constructor(){
+        this.intialize();
     }
 
-    intialize = (html_dom) => {
+    intialize = () => {
         // PIXI App
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         this.app = new PIXI.Application({
-            view: html_dom,
-            width: 500,
-            height: 250,
+            width: 512,
+            height: 256,
             backgroundColor: '0xeeeeee'
         });
 
         // Background
-        this.background = PIXI.TilingSprite.from("assets/sprites/grass.png");
-        this.background.width = 250;
-        this.background.height = 125;
-        this.background.scale.set(2);
+        this.background = PIXI.Sprite.from("assets/sprites/background.png");
+        this.background.width = 512;
+        this.background.height = 256;
         this.addOnStage(this.background);
         this.tower = PIXI.Sprite.from("assets/sprites/tower.png");
-        this.tower.x = 400;
-        this.tower.y = 100;
+        this.tower.anchor.set(0.5);
+        this.tower.x = 415;
+        this.tower.y = 120;
         this.tower.scale.set(2);
         this.addOnStage(this.tower);
+        const outlineFilterBlue = new PIXI.filters.OutlineFilter(2, 0x000000);
+        this.tower.filters = [outlineFilterBlue];
         // Enemies
         this.enemies = [];
         // Towers
         this.towers = [];
         this.total_tier = 0;
-        // Main ticker
-        this.ticker = PIXI.Ticker.shared;
-        this.ticker.autoStart = true;
+    }
+
+    setTicker = (ticker) => {
+        this.ticker = ticker;
         this.ticker.add((time) => {
-            this.app.renderer.render(this.app.stage);
-            this.towers.forEach((tower) => {
-                tower.update(this, this.enemies);
-            });
-            this.app.stage.children.sort(function(a, b) {
-                if (a.position.y > b.position.y) return 1;
-                if (a.position.y < b.position.y) return -1;
-                if (a.position.x > b.position.x) return 1;
-                if (a.position.x < b.position.x) return -1;
-                return 0;
-            });
+            if(this.app.stage){
+                this.app.renderer.render(this.app.stage);
+                this.towers.forEach((tower) => {
+                    tower.update(this, this.enemies);
+                });
+                this.app.stage.children.sort(function(a, b) {
+                    if (a.position.y > b.position.y) return 1;
+                    if (a.position.y < b.position.y) return -1;
+                    if (a.position.x > b.position.x) return 1;
+                    if (a.position.x < b.position.x) return -1;
+                    return 0;
+                });
+            }
         });
+        this.ticker.start();
     }
 
     addOnStage = (object) => {

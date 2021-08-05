@@ -34,6 +34,8 @@ class Tower {
         // }else{
             sprite = new PIXI.Sprite.from(PIXI.Loader.shared.resources[`${type}_0`].texture);
         // }
+        const outlineFilterBlue = new PIXI.filters.OutlineFilter(2, 0x000000);
+        sprite.filters = [outlineFilterBlue];
         sprite.anchor.set(0.5);
         // sprite.scale.set(2);
         sprite.interactive = true;

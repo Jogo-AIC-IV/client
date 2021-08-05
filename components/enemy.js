@@ -1,10 +1,11 @@
 class Enemy {
     createEnemy(position, life) {
-
-        //const sprite = PIXI.Sprite.from(ENEMY_SPRITE);
-        const sprite = PIXI.AnimatedSprite.fromFrames(['assets/sprites/enemy_walk_0.png', 'assets/sprites/enemy_walk_1.png']);
-        sprite.animationSpeed = 0.07;
-        sprite.play();
+        const sprite = PIXI.Sprite.from(PIXI.Loader.shared.resources['enemy'].texture);
+        //const sprite = PIXI.AnimatedSprite.fromFrames(['assets/sprites/enemy_walk_0.png', 'assets/sprites/enemy_walk_1.png']);
+        //sprite.animationSpeed = 0.07;
+        //sprite.play();
+        const outlineFilterBlue = new PIXI.filters.OutlineFilter(2, 0x000000);
+        sprite.filters = [outlineFilterBlue];
         sprite.anchor.set(0.5);
         // sprite.scale.set(2);
         sprite.x = position.x;
@@ -14,11 +15,11 @@ class Enemy {
 
         sprite.animation = 1;
 
-        sprite.setLinearLoop = function(game, position_start, position_end, speed, callback_success = null, callback_died = null) {
+        sprite.setLinearLoop = function(ticker, position_start, position_end, speed, callback_success = null, callback_died = null) {
             this.x = position_start.x;
             this.y = position_start.y;
 
-            game.ticker.add((time) => {
+            ticker.add((time) => {
                 if(this.scale.x == 2 || this.scale.x == 2.2){
                     this.animation *= -1;
                 }
@@ -57,12 +58,12 @@ class Enemy {
             });
         }
 
-        sprite.setComplexPath = function(game, paths, speed, callback_success = null, callback_died = null) {
+        sprite.setComplexPath = function(ticker, paths, speed, callback_success = null, callback_died = null) {
             this.current_path = 0;
             this.x = paths[this.current_path].x;
             this.y = paths[this.current_path].y;
 
-            game.ticker.add((time) => {
+            ticker.add((time) => {
 
                 let position_start = paths[this.current_path];
                 let position_end = paths[this.current_path < paths.length - 1 ? this.current_path + 1 : 0];
