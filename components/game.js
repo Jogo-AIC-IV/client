@@ -74,22 +74,6 @@ class Game {
             backgroundColor: '0xeeeeee'
         });
 
-        this.app.loader.baseUrl = "assets/sprites"
-        this.app.loader
-            .add("archer_0", "archer_0.png")
-            .add("archer_1", "archer_1.png")
-            .add("archer_2", "archer_2.png")
-            .add("archer_3", "archer_3.png")
-            .add("warrior_0", "warrior_0.png")
-            .add("warrior_1", "warrior_1.png")
-            .add("warrior_2", "warrior_2.png")
-            .add("warrior_3", "warrior_3.png")
-            .add("lancer_0", "lancer_0.png")
-            .add("lancer_1", "lancer_1.png")
-            .add("lancer_2", "lancer_2.png")
-            .add("lancer_3", "lancer_3.png")
-        this.app.loader.load();
-
         // Background
         this.background = PIXI.TilingSprite.from("assets/sprites/grass.png");
         this.background.width = 250;

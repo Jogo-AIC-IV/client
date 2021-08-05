@@ -32,7 +32,7 @@ class Tower {
         //     sprite.animationSpeed = 0.07;
         //     sprite.play();
         // }else{
-            sprite = new PIXI.Sprite.from(app.app.loader.resources[`${type}_0`].texture);
+            sprite = new PIXI.Sprite.from(PIXI.Loader.shared.resources[`${type}_0`].texture);
         // }
         sprite.anchor.set(0.5);
         // sprite.scale.set(2);
