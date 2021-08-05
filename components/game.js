@@ -98,6 +98,13 @@ class Game {
             this.towers.forEach((tower) => {
                 tower.update(this, this.enemies);
             });
+            this.app.stage.children.sort(function(a, b) {
+                if (a.position.y > b.position.y) return 1;
+                if (a.position.y < b.position.y) return -1;
+                if (a.position.x > b.position.x) return 1;
+                if (a.position.x < b.position.x) return -1;
+                return 0;
+            });
         });
     }
 
@@ -128,7 +135,7 @@ class Game {
             upgrade.tier += 1;
             this.total_tier += 0.5;
 
-            upgrade.sprite.texture = this.app.loader.resources[`${upgrade.type}_${upgrade.tier}`].texture;
+            upgrade.sprite.texture = PIXI.Loader.shared.resources[`${upgrade.type}_${upgrade.tier}`].texture;
             // upgrade.sprite.scale.set(2);
 
 
