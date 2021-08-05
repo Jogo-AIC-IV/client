@@ -157,6 +157,7 @@ var app = new Vue({
     },
     methods: {
         loadPixi(){
+            if(this.pixi_initialized) { return this.initializePixi(); }
             // Carregando sprites
             this.pixi_loader = PIXI.Loader.shared;
             this.pixi_loader.baseUrl = "assets/sprites"
