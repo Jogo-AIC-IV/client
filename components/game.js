@@ -98,7 +98,7 @@ class Game {
         this.addOnStage(this.background);
         this.tower = PIXI.Sprite.from("assets/sprites/tower.png");
         this.tower.x = 400;
-        this.tower.y = 150;
+        this.tower.y = 100;
         this.tower.scale.set(2);
         this.addOnStage(this.tower);
         // Enemies

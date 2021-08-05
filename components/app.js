@@ -57,10 +57,17 @@ var app = new Vue({
     methods: {
         initializePixi() {
             this.pixi = new Game(this.$refs.canvas);
-            let paths = [{x: -100, y:50}, {x: 440, y: 50}, {x: 440, y:200}];
-            let enemy = ENEMY.createEnemy({x: -100, y: 50}, 6);
-            enemy.setComplexPath(this.pixi, paths, 1, () => {}, () => {});
-            this.pixi.addEnemy(enemy);
+
+            let paths_top = [{x: -100, y:50}, {x: 440, y: 50}, {x: 440, y: 100}];
+            let enemy_top = ENEMY.createEnemy({x: -100, y: 50}, 6);
+            enemy_top.setComplexPath(this.pixi, paths_top, 1, () => {}, () => {});
+
+            let paths_bot = [{x: -100, y:200}, {x: 440, y: 200}, {x: 440, y: 100}];
+            let enemy_bot = ENEMY.createEnemy({x: -100, y: 50}, 6);
+            enemy_bot.setComplexPath(this.pixi, paths_bot, 1, () => {}, () => {});
+
+            this.pixi.addEnemy(enemy_bot);
+            this.pixi.addEnemy(enemy_top);
             this.pixi_initialized = true;
         },
         buyRandomUnit() {
