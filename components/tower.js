@@ -1,5 +1,5 @@
 class Tower {
-    createTower(app, type, position, config) {
+    createTower(loader, filters, app, type_name, position, type) {
 
         // Main Container
         const container     = new PIXI.Container();
@@ -10,32 +10,24 @@ class Tower {
         
 
         // Config
-        container.type      = type;
+        container.type      = type_name;
         container.target    = -1;
 
         // Bullets
-        container.bullets   = config;
-        container.range     = config.config.range;
+        container.bullets   = type;
+        container.range     = type.config.range;
 
         // Range
         const sprite_range  = new PIXI.Graphics();
         sprite_range.beginFill(0x000000);
-        sprite_range.drawCircle(0, 0, container.bullets.config.range);
+        sprite_range.drawCircle(0, 0, type.config.range);
         sprite_range.endFill();
         sprite_range.alpha = 0;
         container.addChild(sprite_range);
 
         // Main Sprite
-        let sprite = {}
-        // if(type == 'lancer'){
-        //     sprite = PIXI.AnimatedSprite.fromFrames(['assets/sprites/lancer_3_0.png', 'assets/sprites/lancer_3_1.png', 'assets/sprites/lancer_3_2.png', 'assets/sprites/lancer_3_1.png']);
-        //     sprite.animationSpeed = 0.07;
-        //     sprite.play();
-        // }else{
-            sprite = new PIXI.Sprite.from(PIXI.Loader.shared.resources[`${type}_0`].texture);
-        // }
-        const outlineFilterBlue = new PIXI.filters.OutlineFilter(2, 0x000000);
-        sprite.filters = [outlineFilterBlue];
+        let sprite = new PIXI.Sprite.from(loader.resources[`${type_name}_0`].texture);
+        sprite.filters = filters;
         sprite.anchor.set(0.5);
         // sprite.scale.set(2);
         sprite.interactive = true;
@@ -54,7 +46,7 @@ class Tower {
                     sprite_range.alpha  = 0;
                     this.dragging = false;
                     this.data = null;
-                    app.combine(this.parent.hash, this.combining.hash);
+                    app.combine(loader, this.parent.hash, this.combining.hash);
                 }
             }
         }).on('pointerupoutside',   function() {
@@ -67,7 +59,7 @@ class Tower {
                     sprite_range.alpha  = 0;
                     this.dragging = false;
                     this.data = null;
-                    app.combine(this.parent.hash, this.combining.hash);
+                    app.combine(loader, this.parent.hash, this.combining.hash);
                 }
             }
         }).on('pointermove',        function() {
@@ -77,14 +69,14 @@ class Tower {
 
                 this.combining = app.towers.find((tower) => {
                     if(tower){
-                        return tower.type == this.parent.type &&  tower.hash != this.parent.hash && tower.tier == this.parent.tier && Math.abs(tower.x - new_position.x) + Math.abs(tower.y - new_position.y) < 50;
+                        return tower.type == this.parent.type &&  tower.hash != this.parent.hash && tower.tier == this.parent.tier && Math.abs(tower.x - new_position.x) + Math.abs(tower.y - new_position.y) < 30;
                     }else{
                         return false;
                     }
                 });
 
-                this.parent.x = new_position.x;
-                this.parent.y = new_position.y;
+                this.parent.x = new_position.x >= 25 && new_position.x <= 475 ? new_position.x : this.parent.x;
+                this.parent.y = new_position.y >= 25 && new_position.y <= 225 ? new_position.y : this.parent.y;
                 if(this.combining) {
                     this.parent.x = this.combining.x;
                     this.parent.y = this.combining.y;
@@ -94,17 +86,11 @@ class Tower {
         container.sprite = sprite;
         container.addChild(sprite);
 
-
-        container.updateTexture = function(texture) { 
-            sprite.destroy();
-
-        }
-
         container.findEnemy = function(enemies) {
-            this.target = enemies.findIndex((enemy) => {
+            this.target = enemies ? enemies.findIndex((enemy) => {
                 let distance = Math.sqrt( Math.pow((this.x - enemy.x), 2) + Math.pow((this.y - enemy.y), 2));
                 return distance <= this.bullets.config.range;
-            });
+            }) : -1;
         } 
 
         container.newBullet = function(app) {
